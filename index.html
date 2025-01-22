@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreamento de Estudo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .justify-center{
+            justify-content: left !important;
+        }
+        #subjects{
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <h1 class="text-2xl font-bold text-blue-600 text-center">Rastreamento de Estudo</h1>
+    <div class="max-w-md mx-auto mt-6" id="subjects"></div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/progress';
+
+        async function loadProgress() {
+            const response = await fetch(API_URL);
+            return response.json();
+        }
+
+        async function saveProgress(progress) {
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(progress)
+            });
+        }
+
+        async function initialize() {
+            const progress = await loadProgress();
+            const container = document.getElementById("subjects");
+            
+            Object.keys(progress).forEach(subject => {
+                const div = document.createElement("div");
+                div.classList.add("mb-4", "p-4", "bg-white", "rounded-lg", "shadow-md");
+                div.innerHTML = `<strong class="text-lg text-gray-700">${subject}:</strong>`;
+                const grid = document.createElement("div");
+                grid.classList.add("flex", "justify-center", "flex-wrap", "mt-2");
+                
+                progress[subject].forEach((selected, i) => {
+                    const square = document.createElement("div");
+                    square.classList.add("w-8", "h-8", "m-1", "border", "border-gray-400", "rounded", "cursor-pointer", "transition", "duration-200", "ease-in-out");
+                    square.classList.add(selected ? "bg-green-500" : "bg-white");
+                    
+                    square.addEventListener("click", async () => {
+                        square.classList.toggle("bg-green-500");
+                        square.classList.toggle("bg-white");
+                        progress[subject][i] = square.classList.contains("bg-green-500");
+                        await saveProgress(progress);
+                    });
+                    grid.appendChild(square);
+                });
+                
+                div.appendChild(grid);
+                container.appendChild(div);
+            });
+        }
+
+        initialize();
+    </script>
+</body>
+</html>

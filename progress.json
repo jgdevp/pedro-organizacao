@@ -1,0 +1,35 @@
+{
+    "Matemática": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ],
+    "OBMEP": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ],
+    "Leitura": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ],
+    "Eletronica": [
+        false,
+        false,
+        false,
+        false,
+        false
+    ]
+
+
+}
